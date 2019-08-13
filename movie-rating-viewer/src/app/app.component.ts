@@ -18,19 +18,20 @@ export class AppComponent {
     this.getMovieInfo(this.movieTitle);
   }
   getMovieInfo(movieTitle: string) {
-    const formattedMovieTitle = this.titleCase(movieTitle);
-    this.ratingService.getMovieInfo(formattedMovieTitle).subscribe(
+    this.ratingService.getMovieInfo(movieTitle).subscribe(
       response => {
         if (response.Response === 'True') {
           this.movieInfo = response;
+          const formattedMovieTitle = response.Title;
           if (!this.searchHistory) {
             this.searchHistory = [];
           }
-          this.searchHistory = this.searchHistory.filter((x, y, z) => x !== formattedMovieTitle);
-          this.searchHistory.push(formattedMovieTitle);
+          if(!this.searchHistory.includes(formattedMovieTitle)) {
+            this.searchHistory.push(formattedMovieTitle);
+          }
         } else {
           this.movieInfo = null;
-          alert('Movie with title : ' + formattedMovieTitle + ' not found');
+          alert('Movie with title : ' + movieTitle + ' not found');
         }
       }
     );
